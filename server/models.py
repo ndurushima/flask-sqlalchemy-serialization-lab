@@ -24,6 +24,12 @@ class Customer(db.Model):
     def __repr__(self):
         return f'<Customer {self.id}, {self.name}>'
 
+class CustomerSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.String()
+
+    reviews = fields.Nested(lambda: ReviewSchema(exclude=("customer", "item")), many=True, dump_only=True)
+
 
 class Item(db.Model):
     __tablename__ = 'items'
@@ -37,6 +43,13 @@ class Item(db.Model):
     def __repr__(self):
         return f'<Item {self.id}, {self.name}, {self.price}>'
     
+class ItemSchema(Schema):
+    id = fields.Int(dump_only=True)
+    name = fields.String()
+    price = fields.Float()
+
+    reviews = fields.Nested(lambda: ReviewSchema(exclude=("item", "customer")), many=True, dump_only=True)
+
 
 class Review(db.Model):
     __tablename__= 'reviews'
@@ -52,4 +65,11 @@ class Review(db.Model):
 
     def __repr__(self):
         return f'<Review {self.id}, {self.comment}, {self.customer_id}, {self.item_id}>'
+
+class ReviewSchema(Schema):
+    id = fields.Int(dump_only=True)
+    comment = fields.String()
+
+    customer = fields.Nested(lambda: CustomerSchema(exclude=("reviews", )), dump_only=True)
+    item = fields.Nested(lambda: ItemSchema(exclude=("reviews",)), dump_only=True)
 
