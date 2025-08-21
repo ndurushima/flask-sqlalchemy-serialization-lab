@@ -19,6 +19,8 @@ class Customer(db.Model):
 
     reviews = db.relationship('Review', back_populates='customer', cascade='all, delete-orphan')
 
+    items = association_proxy('reviews', 'item', creator=lambda item: Review(item=item))
+
     def __repr__(self):
         return f'<Customer {self.id}, {self.name}>'
 
