@@ -5,8 +5,8 @@ from models import db, Customer, Review, Item
 
 with app.app_context():
 
-    Customer.query.delete()
     Review.query.delete()
+    Customer.query.delete()
     Item.query.delete()
 
     customer1 = Customer(name='Tal Yuri')
